@@ -1,13 +1,13 @@
 #include <RFduinoBLE.h>
 
-int notificationLED  = 4;
+int notificationLED  = 2;
 
 void setup() {
   Serial.begin(9600);
   pinMode(notificationLED , OUTPUT);
-  
+
   RFduinoBLE.advertisementData = "RFduino";
-  
+
   RFduinoBLE.begin();
 }
 
@@ -30,8 +30,8 @@ void RFduinoBLE_onReceive(char *data, int len) {
     Serial.print(data[i]);
   }
   Serial.print("\n");
-  
+
   RFduinoBLE.send(data, len);
-  
+
   digitalWrite(notificationLED , LOW);
 }

@@ -17,7 +17,7 @@ class RFduino:
     self.name = name
 
   def get_mac_address(self):
-    """ Gets the resolved MAC address of the RFduino. Must 
+    """ Gets the resolved MAC address of the RFduino. Must
         have called find() and found a device beforehand.
     """
     return self.mac
@@ -31,7 +31,7 @@ class RFduino:
     print "Reset service"
 
   def find(self):
-    """ Finds the MAC address of the RFDuino by checking 
+    """ Finds the MAC address of the RFDuino by checking
         hcitool output for the name of the RFDuino
     """
     self.reset_service()
@@ -43,14 +43,14 @@ class RFduino:
        and lescan is the hcitool command that actually scans for devices
     """
     p = subprocess.Popen(
-      'timeout -s INT 0.5 hcitool -i %s lescan' % self.dongle_id, 
+      'timeout -s INT 0.5 hcitool -i %s lescan' % self.dongle_id,
       bufsize = 0,
-      shell = True, 
+      shell = True,
       stdout = subprocess.PIPE,
       stderr = subprocess.STDOUT
     )
     (out, err) = p.communicate()
-    m = re.search('(.*?) ' + self.name, out) 
+    m = re.search('(.*?) ' + self.name, out)
     if m:
       self.mac = m.group(1)
       return True
@@ -60,16 +60,16 @@ class RFduino:
     """ Sends a character string to the RFduino. """
     if not self.mac:
       raise Exception("Unresolved MAC Address - did you find()?")
-    
-    
+
+
     """ for c in msg accesses each character in the string msg as c, one by one,
-        ord() takes the unicode of the character, 
+        ord() takes the unicode of the character,
         hex() turns it into a hex,
-        [2:] removes the first two characters "0x", 
+        [2:] removes the first two characters "0x",
         zfill() ensures that the resulting string is two characters(padding with 0's if only one).
     """
     msg_hex = "".join([hex(ord(c))[2:].zfill(2) for c in msg])
-    
+
     """ The gatttool command establishes a connection with a ble device
         -b is the device that gatt will conenct to
         -i is the id of the bluetooth dongle
@@ -78,7 +78,7 @@ class RFduino:
         --handle=0x0011 specifies where on the device to write(handle is kind of like a port, and 0x0011 is the port id)
         --value is the imput string that we formatted into hex
     """
-    cmd = "gatttool -b %s -i %s -t random --char-write --handle=0x0011 --value=%s" % (self.mac, self.dongle_id, msg_hex)
+    cmd = "gatttool -b %s -i %s -t random --char-write-req --handle=0x0011 --value=%s" % (self.mac, self.dongle_id, msg_hex)
     p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
     (out, error) = p.communicate()
 
@@ -86,7 +86,7 @@ class RFduino:
     if not self.mac:
       raise Exception("Unresolved MAC Address - did you find()?")
 
-    
+
     """ The gatttool command establishes a connection with a ble device
         -b is the device that gatt will conenct to
         -i is the id of the bluetooth dongle
@@ -99,4 +99,4 @@ class RFduino:
     (out, error) = p.communicate()
     out = out.replace(" ", "").strip().split(":")[1]
     return out.decode("hex")
-    
+

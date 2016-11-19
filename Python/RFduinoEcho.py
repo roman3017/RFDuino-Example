@@ -7,7 +7,7 @@
 from RFduino import RFduino
 import sys
 
-DONGLE_ID = "hci1"
+DONGLE_ID = "hci0"
 RFDUINO_NAME = "RFduino"
 device = RFduino(DONGLE_ID, RFDUINO_NAME)
 
@@ -22,7 +22,7 @@ def main():
     toSend = raw_input("String to send to RFduino: ")
     device.send(toSend)
     print "Response from RFduino: " + device.read()
-  
+
 if __name__ == "__main__":
   main()
-  
+
