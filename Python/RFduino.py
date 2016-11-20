@@ -43,7 +43,7 @@ class RFduino:
        and lescan is the hcitool command that actually scans for devices
     """
     p = subprocess.Popen(
-      'timeout -s INT 0.5 hcitool -i %s lescan' % self.dongle_id,
+      'timeout -s INT 2 hcitool -i %s lescan' % self.dongle_id,
       bufsize = 0,
       shell = True,
       stdout = subprocess.PIPE,
